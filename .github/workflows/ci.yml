@@ -10,16 +10,16 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Get npm cache directory path
+        id: npm-cache-dir-path
+        run: echo "::set-output name=dir::$(npm config get cache)"
       - uses: actions/cache@v1
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: web-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: ${{ steps.npm-cache-dir-path.outputs.dir }}
+          key: web-${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            web-${{ runner.os }}-yarn-
-      - run: yarn --frozen-lockfile
-      - run: yarn format:check
-      - run: yarn lint
-      - run: yarn test
+            web-${{ runner.os }}-npm-
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run test
